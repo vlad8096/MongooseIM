@@ -550,7 +550,17 @@ invalid_field_value(Field, Value) ->
 should_be_stored_in_inbox(Msg) ->
     not is_forwarded_message(Msg) andalso
         not is_error_message(Msg) andalso
-        not is_offline_message(Msg).
+        not is_offline_message(Msg) andalso
+        not is_replace_message(Msg).
+
+-spec is_replace_message(Msg :: exml:element()) -> boolean().
+is_replace_message(Msg) ->
+    case exml_query:subelement_with_ns(Msg, <<"urn:xmpp:message-correct:0">>, undefined) of
+        undefined ->
+            false;
+        _ ->
+            true
+    end.
 
 -spec is_forwarded_message(Msg :: exml:element()) -> boolean().
 is_forwarded_message(Msg) ->
